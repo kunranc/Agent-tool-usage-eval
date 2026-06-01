@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "timestamp": "20260601T095702",
+    "system_prompt": "A",
+    "prompt_set": "prompts/failure.csv",
+    "n_prompts": 2
+  },
+  "summary": {
+    "n": 2,
+    "by_category_n": {
+      "ambiguous": 0,
+      "happy_path": 2,
+      "out_of_scope": 0
+    },
+    "happy_path_accuracy": 1.0,
+    "ambiguous_preferred_rate": null,
+    "out_of_scope_abstention_rate": null,
+    "overall_correct_rate": 1.0,
+    "latency_ms": {
+      "min": 2815.5,
+      "p50": 2815.5,
+      "p95": 3660.4,
+      "max": 3660.4,
+      "mean": 3237.9
+    },
+    "trace_errors": 0,
+    "tool_failures": 2
+  },
+  "results": [
+    {
+      "id": "f01",
+      "category": "happy_path",
+      "prompt": "Save a note that says: BREAK this should trigger the failure hook.",
+      "expected": "notes_store",
+      "notes": "Triggers BREAK token in notes_store. Tool raises RuntimeError; agent loop catches and returns {ok:False,error}. Grader still counts notes_store as 'expected' tool selection because the SELECTION was correct; only the execution failed. Verifies graceful degradation.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "It looks like the note save triggered an error. The system detected the \"BREAK\" token in your note text and simulated a tool failure as you intended. The note was not saved due to this failure.\n\nIf you'd like to save a note without triggering this, you could rephrase it without the \"BREAK\" keyword. Would you like me to try saving a modified version?",
+      "steps": 2,
+      "total_latency_ms": 2815.5,
+      "trace_error": null,
+      "trace": {
+        "final_text": "It looks like the note save triggered an error. The system detected the \"BREAK\" token in your note text and simulated a tool failure as you intended. The note was not saved due to this failure.\n\nIf you'd like to save a note without triggering this, you could rephrase it without the \"BREAK\" keyword. Would you like me to try saving a modified version?",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "BREAK this should trigger the failure hook."
+            },
+            "result": null,
+            "ok": false,
+            "error": "RuntimeError: simulated tool failure (BREAK token)",
+            "latency_ms": 0.0
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2815.5,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "f02",
+      "category": "happy_path",
+      "prompt": "Please save the following reminder: tomorrow morning BREAK call the dentist.",
+      "expected": "notes_store",
+      "notes": "Same failure injection but inside a longer natural prompt. Confirms the BREAK trigger is content-based, not prompt-shape-based. Agent should recover and acknowledge it couldn't save the note.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store",
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "Done! I've saved your reminder as: \"Tomorrow morning - call the dentist\" (Note ID: 1). The system had an issue with the original formatting, so I adjusted it slightly while keeping the essential information.",
+      "steps": 3,
+      "total_latency_ms": 3660.4,
+      "trace_error": null,
+      "trace": {
+        "final_text": "Done! I've saved your reminder as: \"Tomorrow morning - call the dentist\" (Note ID: 1). The system had an issue with the original formatting, so I adjusted it slightly while keeping the essential information.",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "tomorrow morning BREAK call the dentist"
+            },
+            "result": null,
+            "ok": false,
+            "error": "RuntimeError: simulated tool failure (BREAK token)",
+            "latency_ms": 0.0
+          },
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "Tomorrow morning - call the dentist"
+            },
+            "result": {
+              "id": 1,
+              "text": "Tomorrow morning - call the dentist"
+            },
+            "ok": true,
+            "error": null,
+            "latency_ms": 10.0
+          }
+        ],
+        "steps": 3,
+        "total_latency_ms": 3660.4,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,784 @@
+{
+  "meta": {
+    "timestamp": "20260601T091552",
+    "system_prompt": "B",
+    "prompt_set": "prompts/eval.csv",
+    "n_prompts": 20
+  },
+  "summary": {
+    "n": 20,
+    "by_category_n": {
+      "happy_path": 10,
+      "out_of_scope": 5,
+      "ambiguous": 5
+    },
+    "happy_path_accuracy": 0.9,
+    "ambiguous_preferred_rate": 0.8,
+    "out_of_scope_abstention_rate": 1.0,
+    "overall_correct_rate": 0.9,
+    "latency_ms": {
+      "min": 1740.5,
+      "p50": 2277.1,
+      "p95": 5511.3,
+      "max": 6163.4,
+      "mean": 2825.0
+    },
+    "trace_errors": 0,
+    "tool_failures": 0
+  },
+  "results": [
+    {
+      "id": "h01",
+      "category": "happy_path",
+      "prompt": "What is 17 * 23?",
+      "expected": "calculator",
+      "notes": "Pure arithmetic. Calculator is the only sensible tool.",
+      "first_tool": "calculator",
+      "tool_sequence": [
+        "calculator"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "17 * 23 = **391**",
+      "steps": 2,
+      "total_latency_ms": 2189.0,
+      "trace_error": null,
+      "trace": {
+        "final_text": "17 * 23 = **391**",
+        "tool_calls": [
+          {
+            "name": "calculator",
+            "input": {
+              "expression": "17 * 23"
+            },
+            "result": 391,
+            "ok": true,
+            "error": null,
+            "latency_ms": 0.1
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2189.0,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h02",
+      "category": "happy_path",
+      "prompt": "Compute (482 + 318) / 25.",
+      "expected": "calculator",
+      "notes": "Multi-op arithmetic with parentheses. Calculator handles this directly.",
+      "first_tool": "calculator",
+      "tool_sequence": [
+        "calculator"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "The result is **32**.",
+      "steps": 2,
+      "total_latency_ms": 2482.0,
+      "trace_error": null,
+      "trace": {
+        "final_text": "The result is **32**.",
+        "tool_calls": [
+          {
+            "name": "calculator",
+            "input": {
+              "expression": "(482 + 318) / 25"
+            },
+            "result": 32.0,
+            "ok": true,
+            "error": null,
+            "latency_ms": 0.2
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2482.0,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h03",
+      "category": "happy_path",
+      "prompt": "What is 17% of 240?",
+      "expected": "calculator",
+      "notes": "Percentage as a fraction (0.17 * 240). Calculator is built for this.",
+      "first_tool": "calculator",
+      "tool_sequence": [
+        "calculator"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "17% of 240 is **40.8**.",
+      "steps": 2,
+      "total_latency_ms": 1740.5,
+      "trace_error": null,
+      "trace": {
+        "final_text": "17% of 240 is **40.8**.",
+        "tool_calls": [
+          {
+            "name": "calculator",
+            "input": {
+              "expression": "0.17 * 240"
+            },
+            "result": 40.800000000000004,
+            "ok": true,
+            "error": null,
+            "latency_ms": 0.2
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 1740.5,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h04",
+      "category": "happy_path",
+      "prompt": "Please save a note: pick up dry cleaning Friday at 5pm.",
+      "expected": "notes_store",
+      "notes": "Explicit \"save a note\" with clear text. notes_store action=add.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "Done! I've saved your note: \"pick up dry cleaning Friday at 5pm\" (Note ID: 1).",
+      "steps": 2,
+      "total_latency_ms": 2018.8,
+      "trace_error": null,
+      "trace": {
+        "final_text": "Done! I've saved your note: \"pick up dry cleaning Friday at 5pm\" (Note ID: 1).",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "pick up dry cleaning Friday at 5pm"
+            },
+            "result": {
+              "id": 1,
+              "text": "pick up dry cleaning Friday at 5pm"
+            },
+            "ok": true,
+            "error": null,
+            "latency_ms": 8.4
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2018.8,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h05",
+      "category": "happy_path",
+      "prompt": "List all the notes I've saved.",
+      "expected": "notes_store",
+      "notes": "Direct request to enumerate saved notes. notes_store action=list. Depends on h04 having added a note in the same eval run.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "You have 1 saved note:\n\n**Note ID 1:** \"pick up dry cleaning Friday at 5pm\"",
+      "steps": 2,
+      "total_latency_ms": 2145.6,
+      "trace_error": null,
+      "trace": {
+        "final_text": "You have 1 saved note:\n\n**Note ID 1:** \"pick up dry cleaning Friday at 5pm\"",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "list"
+            },
+            "result": [
+              {
+                "id": 1,
+                "text": "pick up dry cleaning Friday at 5pm"
+              }
+            ],
+            "ok": true,
+            "error": null,
+            "latency_ms": 3.4
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2145.6,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h06",
+      "category": "happy_path",
+      "prompt": "Delete note number 1.",
+      "expected": "notes_store",
+      "notes": "Explicit id and delete intent. notes_store action=delete with note_id=1.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "Done! Note number 1 has been successfully deleted.",
+      "steps": 2,
+      "total_latency_ms": 1765.3,
+      "trace_error": null,
+      "trace": {
+        "final_text": "Done! Note number 1 has been successfully deleted.",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "delete",
+              "note_id": 1
+            },
+            "result": {
+              "deleted_id": 1
+            },
+            "ok": true,
+            "error": null,
+            "latency_ms": 1.9
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 1765.3,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h07",
+      "category": "happy_path",
+      "prompt": "Who was Marie Curie?",
+      "expected": "wikipedia_search",
+      "notes": "Biographical question about a historical figure with a Wikipedia entry. Encyclopedic, not real-time.",
+      "first_tool": "wikipedia_search",
+      "tool_sequence": [
+        "wikipedia_search"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "**Marie Curie** (1867–1934) was a Polish-born physicist and chemist who conducted pioneering research on radioactivity. Here are the key facts about her:\n\n- **Full name**: Maria Salomea Skłodowska-Curie\n- **Nationality**: Polish-born, but worked primarily in France\n- **Major achievements**: \n  - Discovered the elements polonium and radium\n  - Pioneered research on radioactivity\n  - Won the Nobel Prize in Physics (1903) with her husband Pierre Curie and physicist Henri Becquerel for their work on radioactivity\n  - Won the Nobel Prize in Chemistry (1911) for the discovery of radium\n  - She was the first woman to win a Nobel Prize and the first person to win Nobel Prizes in two different scientific fields\n\n- **Personal life**: She was married to physicist Pierre Curie, and together they became the first married couple to win a Nobel Prize. Their work laid important foundations for modern atomic physics and chemistry.\n\n- **Legacy**: Despite the dangers of radiation exposure (which ultimately contributed to her death), Marie Curie's groundbreaking work revolutionized our understanding of atomic structure and energy, and she remains one of the most influential scientists in history.",
+      "steps": 2,
+      "total_latency_ms": 4379.2,
+      "trace_error": null,
+      "trace": {
+        "final_text": "**Marie Curie** (1867–1934) was a Polish-born physicist and chemist who conducted pioneering research on radioactivity. Here are the key facts about her:\n\n- **Full name**: Maria Salomea Skłodowska-Curie\n- **Nationality**: Polish-born, but worked primarily in France\n- **Major achievements**: \n  - Discovered the elements polonium and radium\n  - Pioneered research on radioactivity\n  - Won the Nobel Prize in Physics (1903) with her husband Pierre Curie and physicist Henri Becquerel for their work on radioactivity\n  - Won the Nobel Prize in Chemistry (1911) for the discovery of radium\n  - She was the first woman to win a Nobel Prize and the first person to win Nobel Prizes in two different scientific fields\n\n- **Personal life**: She was married to physicist Pierre Curie, and together they became the first married couple to win a Nobel Prize. Their work laid important foundations for modern atomic physics and chemistry.\n\n- **Legacy**: Despite the dangers of radiation exposure (which ultimately contributed to her death), Marie Curie's groundbreaking work revolutionized our understanding of atomic structure and energy, and she remains one of the most influential scientists in history.",
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "input": {
+              "query": "Marie Curie"
+            },
+            "result": [
+              {
+                "title": "Marie Curie",
+                "snippet": "Skłodowska Curie (Polish: [ˈmarja salɔˈmɛa skwɔˈdɔfska kiˈri] ; née Skłodowska; 7 November 1867 – 4 July 1934), better known as Marie Curie (/ˈkjʊəri/",
+                "url": "https://en.wikipedia.org/wiki/Marie_Curie"
+              },
+              {
+                "title": "Pierre Curie",
+                "snippet": "Marie Curie, for their work on radioactivity. With their win, the Curies became the first married couple to win a Nobel Prize, launching the Curie family",
+                "url": "https://en.wikipedia.org/wiki/Pierre_Curie"
+              },
+              {
+                "title": "Marie Curie (charity)",
+                "snippet": "Marie Curie is a registered charitable organisation in the United Kingdom which provides hospice care and support for anyone with an illness they are",
+                "url": "https://en.wikipedia.org/wiki/Marie_Curie_%28charity%29"
+              },
+              {
+                "title": "Curie family",
+                "snippet": "The Curie family is a French family from which hailed a number of distinguished scientists. Polish-born Marie Skłodowska-Curie, her French husband Pierre",
+                "url": "https://en.wikipedia.org/wiki/Curie_family"
+              },
+              {
+                "title": "Sojourner (rover)",
+                "snippet": "determined by the number of revolutions of the wheels. Marie Curie, named after Nobel Prize winner Marie Curie, is a flight spare for the Sojourner. During the",
+                "url": "https://en.wikipedia.org/wiki/Sojourner_%28rover%29"
+              }
+            ],
+            "ok": true,
+            "error": null,
+            "latency_ms": 651.8
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 4379.2,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h08",
+      "category": "happy_path",
+      "prompt": "Tell me about the Treaty of Westphalia.",
+      "expected": "wikipedia_search",
+      "notes": "Historical event with a well-known Wikipedia article.",
+      "first_tool": "wikipedia_search",
+      "tool_sequence": [
+        "wikipedia_search"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "The **Peace of Westphalia** (also called the Treaty of Westphalia) is the collective name for two peace treaties signed in October 1648. Here are the key points:\n\n**What it ended:**\n- The **Thirty Years' War**, a devastating conflict that had ravaged Europe, particularly the German territories, for three decades.\n\n**Where it was signed:**\n- The treaties were signed in **Münster** (and Osnabrück), cities in the Westphalia region of what is now Germany.\n\n**Historical significance:**\nThe Peace of Westphalia is considered one of the most important treaties in European history because it:\n\n1. **Established the modern state system** – It recognized the sovereignty of individual states and reduced the power of the Holy Roman Emperor, marking a shift toward the modern nation-state system.\n\n2. **Granted independence** – Switzerland and the Dutch Republic gained formal legal independence from the Holy Roman Empire.\n\n3. **Redrew the map of Europe** – It redistributed territories among various European powers, including France and Sweden, which gained significant territorial gains.\n\n4. **Established principles of international law** – The treaty introduced concepts like the equality of states and the principle that treaties should be honored, laying groundwork for modern international relations.\n\n5. **Reduced religious conflict** – While not ending religious tensions entirely, it established principles of religious tolerance and the right of rulers to determine the religion of their territories.\n\nThe Peace of Westphalia is often cited as the beginning of the modern international system and remains a foundational moment in European and world history.",
+      "steps": 2,
+      "total_latency_ms": 6163.4,
+      "trace_error": null,
+      "trace": {
+        "final_text": "The **Peace of Westphalia** (also called the Treaty of Westphalia) is the collective name for two peace treaties signed in October 1648. Here are the key points:\n\n**What it ended:**\n- The **Thirty Years' War**, a devastating conflict that had ravaged Europe, particularly the German territories, for three decades.\n\n**Where it was signed:**\n- The treaties were signed in **Münster** (and Osnabrück), cities in the Westphalia region of what is now Germany.\n\n**Historical significance:**\nThe Peace of Westphalia is considered one of the most important treaties in European history because it:\n\n1. **Established the modern state system** – It recognized the sovereignty of individual states and reduced the power of the Holy Roman Emperor, marking a shift toward the modern nation-state system.\n\n2. **Granted independence** – Switzerland and the Dutch Republic gained formal legal independence from the Holy Roman Empire.\n\n3. **Redrew the map of Europe** – It redistributed territories among various European powers, including France and Sweden, which gained significant territorial gains.\n\n4. **Established principles of international law** – The treaty introduced concepts like the equality of states and the principle that treaties should be honored, laying groundwork for modern international relations.\n\n5. **Reduced religious conflict** – While not ending religious tensions entirely, it established principles of religious tolerance and the right of rulers to determine the religion of their territories.\n\nThe Peace of Westphalia is often cited as the beginning of the modern international system and remains a foundational moment in European and world history.",
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "input": {
+              "query": "Treaty of Westphalia"
+            },
+            "result": [
+              {
+                "title": "Peace of Westphalia",
+                "snippet": "The Peace of Westphalia (German: Westfälischer Friede, pronounced [vɛstˈfɛːlɪʃɐ ˈfʁiːdə] ) is the collective name for two peace treaties signed in October",
+                "url": "https://en.wikipedia.org/wiki/Peace_of_Westphalia"
+              },
+              {
+                "title": "Westphalia",
+                "snippet": "Rhine-Westphalians&quot;. Westphalia is known for the 1648 Peace of Westphalia which ended the Thirty Years&#039; War, as the two treaties were signed in Münster",
+                "url": "https://en.wikipedia.org/wiki/Westphalia"
+              },
+              {
+                "title": "Jérôme Bonaparte",
+                "snippet": "the youngest brother of Napoleon I who reigned as Jérôme Napoleon I (formally Hieronymus Napoleon in German), King of Westphalia, between 1807 and 1813",
+                "url": "https://en.wikipedia.org/wiki/J%C3%A9r%C3%B4me_Bonaparte"
+              },
+              {
+                "title": "Franco-Spanish War (1635–1659)",
+                "snippet": "continued. The loss of Dutch naval support after Westphalia in 1648 was remedied by Mazarin in 1657, when he negotiated the Treaty of Paris (1657) with",
+                "url": "https://en.wikipedia.org/wiki/Franco-Spanish_War_%281635%E2%80%931659%29"
+              },
+              {
+                "title": "Early modern Switzerland",
+                "snippet": "adhered to throughout the 19th and 20th century conflicts. At the Treaty of Westphalia in 1648, the Swiss Confederacy attained legal independence from the",
+                "url": "https://en.wikipedia.org/wiki/Early_modern_Switzerland"
+              }
+            ],
+            "ok": true,
+            "error": null,
+            "latency_ms": 955.3
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 6163.4,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h09",
+      "category": "happy_path",
+      "prompt": "What is photosynthesis?",
+      "expected": "wikipedia_search",
+      "notes": "Scientific concept; clean Wikipedia lookup.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": false,
+      "final_text": "Photosynthesis is the biological process by which plants, algae, and some bacteria convert light energy (usually from the sun) into chemical energy stored in glucose or other organic compounds. Here's an overview:\n\n**Basic Process:**\nPhotosynthesis uses light energy, water, and carbon dioxide to produce glucose (a sugar) and oxygen. The simplified equation is:\n\n6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂\n\n**Two Main Stages:**\n\n1. **Light-dependent reactions** (occur in the thylakoid membranes of chloroplasts):\n   - Chlorophyll and other pigments absorb light energy\n   - Water molecules are split, releasing oxygen as a byproduct\n   - Energy is captured in molecules like ATP and NADPH\n\n2. **Light-independent reactions** (Calvin cycle, occur in the stroma):\n   - Uses the ATP and NADPH from the light reactions\n   - Converts carbon dioxide into glucose through a series of enzymatic reactions\n\n**Significance:**\n- Produces oxygen, which is essential for most life on Earth\n- Forms the base of most food chains by converting solar energy into chemical energy that organisms can use\n- Critical for maintaining atmospheric oxygen levels and removing carbon dioxide\n\n**Where it occurs:**\nIn plants, photosynthesis primarily takes place in the leaves, specifically within chloroplasts—specialized organelles containing chlorophyll.\n\nThis process is fundamental to life on Earth and is why plants are often called \"producers\" in ecosystems.",
+      "steps": 1,
+      "total_latency_ms": 3254.1,
+      "trace_error": null,
+      "trace": {
+        "final_text": "Photosynthesis is the biological process by which plants, algae, and some bacteria convert light energy (usually from the sun) into chemical energy stored in glucose or other organic compounds. Here's an overview:\n\n**Basic Process:**\nPhotosynthesis uses light energy, water, and carbon dioxide to produce glucose (a sugar) and oxygen. The simplified equation is:\n\n6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂\n\n**Two Main Stages:**\n\n1. **Light-dependent reactions** (occur in the thylakoid membranes of chloroplasts):\n   - Chlorophyll and other pigments absorb light energy\n   - Water molecules are split, releasing oxygen as a byproduct\n   - Energy is captured in molecules like ATP and NADPH\n\n2. **Light-independent reactions** (Calvin cycle, occur in the stroma):\n   - Uses the ATP and NADPH from the light reactions\n   - Converts carbon dioxide into glucose through a series of enzymatic reactions\n\n**Significance:**\n- Produces oxygen, which is essential for most life on Earth\n- Forms the base of most food chains by converting solar energy into chemical energy that organisms can use\n- Critical for maintaining atmospheric oxygen levels and removing carbon dioxide\n\n**Where it occurs:**\nIn plants, photosynthesis primarily takes place in the leaves, specifically within chloroplasts—specialized organelles containing chlorophyll.\n\nThis process is fundamental to life on Earth and is why plants are often called \"producers\" in ecosystems.",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 3254.1,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "h10",
+      "category": "happy_path",
+      "prompt": "Give me an overview of the city of Kyoto.",
+      "expected": "wikipedia_search",
+      "notes": "Named place with a Wikipedia article. Static encyclopedic content.",
+      "first_tool": "wikipedia_search",
+      "tool_sequence": [
+        "wikipedia_search"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "## Overview of Kyoto\n\n**Kyoto** (京都) is the capital city of Kyoto Prefecture, located in the Kansai region of Honshu, Japan. Here's what makes it a significant and fascinating city:\n\n### Historical Significance\n- Kyoto was the imperial capital of Japan from 794 until the capital was moved to Tokyo in 1868\n- The city is home to numerous historic monuments and temples that reflect its long and rich cultural heritage\n- It has been designated as a UNESCO World Heritage Site, with 17 historic locations recognized as \"Historic Monuments of Ancient Kyoto\"\n\n### Cultural Importance\n- Kyoto is renowned as the cultural heart of Japan, preserving traditional Japanese architecture, arts, and customs\n- The city is famous for its thousands of temples and shrines, traditional gardens, and geisha districts\n- It's a major center for traditional Japanese crafts, tea ceremony, and other cultural practices\n\n### Geography & Administration\n- Located in the Kansai region of central Japan\n- The city is divided into eleven wards (ku)\n- It serves as the prefectural capital of Kyoto Prefecture\n\n### Modern Kyoto\n- Despite its historical focus, Kyoto is a vibrant modern city\n- It's a major tourist destination, attracting visitors from around the world who come to experience traditional Japanese culture\n- The city also has contemporary amenities and is home to professional sports teams, such as Kyoto Sanga FC\n\nKyoto remains one of Japan's most important cultural and historical centers, offering a unique blend of ancient traditions and modern urban life.",
+      "steps": 2,
+      "total_latency_ms": 5511.3,
+      "trace_error": null,
+      "trace": {
+        "final_text": "## Overview of Kyoto\n\n**Kyoto** (京都) is the capital city of Kyoto Prefecture, located in the Kansai region of Honshu, Japan. Here's what makes it a significant and fascinating city:\n\n### Historical Significance\n- Kyoto was the imperial capital of Japan from 794 until the capital was moved to Tokyo in 1868\n- The city is home to numerous historic monuments and temples that reflect its long and rich cultural heritage\n- It has been designated as a UNESCO World Heritage Site, with 17 historic locations recognized as \"Historic Monuments of Ancient Kyoto\"\n\n### Cultural Importance\n- Kyoto is renowned as the cultural heart of Japan, preserving traditional Japanese architecture, arts, and customs\n- The city is famous for its thousands of temples and shrines, traditional gardens, and geisha districts\n- It's a major center for traditional Japanese crafts, tea ceremony, and other cultural practices\n\n### Geography & Administration\n- Located in the Kansai region of central Japan\n- The city is divided into eleven wards (ku)\n- It serves as the prefectural capital of Kyoto Prefecture\n\n### Modern Kyoto\n- Despite its historical focus, Kyoto is a vibrant modern city\n- It's a major tourist destination, attracting visitors from around the world who come to experience traditional Japanese culture\n- The city also has contemporary amenities and is home to professional sports teams, such as Kyoto Sanga FC\n\nKyoto remains one of Japan's most important cultural and historical centers, offering a unique blend of ancient traditions and modern urban life.",
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "input": {
+              "query": "Kyoto city Japan"
+            },
+            "result": [
+              {
+                "title": "Kyoto",
+                "snippet": "Kyoto (/ki.ˈoʊ.toʊ/ or /ˈkjoʊ.toʊ/; Japanese: 京都, Kyōto [kʲoꜜː.to] ), officially Kyoto City (京都市, Kyōto-shi; [kʲoː.toꜜ.ɕi] ), is the capital city of Kyoto",
+                "url": "https://en.wikipedia.org/wiki/Kyoto"
+              },
+              {
+                "title": "Kyoto Sanga FC",
+                "snippet": "Kyoto Sanga (京都サンガ) is a Japanese professional football club based in Kyoto. The club plays in the J1 League, the top tier of football in the country",
+                "url": "https://en.wikipedia.org/wiki/Kyoto_Sanga_FC"
+              },
+              {
+                "title": "Kyoto Prefecture",
+                "snippet": "Kyoto Prefecture (京都府, Kyōto-fu; Japanese pronunciation: [kʲoꜜː.to, kʲoː.toꜜ.ɸɯ]) is a prefecture of Japan located in the Kansai region of Honshu. It has",
+                "url": "https://en.wikipedia.org/wiki/Kyoto_Prefecture"
+              },
+              {
+                "title": "Shimogyō-ku, Kyoto",
+                "snippet": "Shimogyō-ku (下京区) is one of the eleven wards in the city of Kyoto, in Kyoto Prefecture, Japan. First established in 1879, it has been merged and split",
+                "url": "https://en.wikipedia.org/wiki/Shimogy%C5%8D-ku%2C_Kyoto"
+              },
+              {
+                "title": "Historic Monuments of Ancient Kyoto (Kyoto, Uji and Otsu Cities)",
+                "snippet": "Ancient Kyoto (Kyoto, Uji and Otsu Cities) encompasses 17 locations in Japan within the city of Kyoto and its immediate vicinity. In 794, the Japanese imperial",
+                "url": "https://en.wikipedia.org/wiki/Historic_Monuments_of_Ancient_Kyoto_%28Kyoto%2C_Uji_and_Otsu_Cities%29"
+              }
+            ],
+            "ok": true,
+            "error": null,
+            "latency_ms": 957.4
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 5511.3,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "a01",
+      "category": "ambiguous",
+      "prompt": "Remember my dog's name is Max.",
+      "expected": "notes_store",
+      "notes": "Two plausible behaviours: (1) call notes_store with text=\"dog's name is Max\" (eager interpretation of \"remember\" as \"save\"), (2) ask for clarification or just acknowledge (cautious; \"remember\" is not the explicit phrase \"save a note\"). Preferred: notes_store — most literal reading of intent; abstaining loses information the user clearly wants kept.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "Got it! I've saved that your dog's name is Max. I'll remember this for future conversations.",
+      "steps": 2,
+      "total_latency_ms": 2105.1,
+      "trace_error": null,
+      "trace": {
+        "final_text": "Got it! I've saved that your dog's name is Max. I'll remember this for future conversations.",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "My dog's name is Max."
+            },
+            "result": {
+              "id": 2,
+              "text": "My dog's name is Max."
+            },
+            "ok": true,
+            "error": null,
+            "latency_ms": 12.6
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2105.1,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "a02",
+      "category": "ambiguous",
+      "prompt": "Add milk to my shopping list.",
+      "expected": "notes_store",
+      "notes": "Two plausible behaviours: (1) notes_store action=add with text=\"shopping: milk\" (eager), (2) clarify that there is no separate shopping-list object (cautious). Preferred: notes_store — best-effort save is more useful than a clarification round-trip.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "Done! I've added milk to your shopping list (note #3). If you'd like to add more items to this list later, just let me know and I can update it.",
+      "steps": 2,
+      "total_latency_ms": 2384.4,
+      "trace_error": null,
+      "trace": {
+        "final_text": "Done! I've added milk to your shopping list (note #3). If you'd like to add more items to this list later, just let me know and I can update it.",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "Shopping list: milk"
+            },
+            "result": {
+              "id": 3,
+              "text": "Shopping list: milk"
+            },
+            "ok": true,
+            "error": null,
+            "latency_ms": 38.5
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2384.4,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "a03",
+      "category": "ambiguous",
+      "prompt": "How many days are in 17 weeks?",
+      "expected": "calculator",
+      "notes": "Two plausible behaviours: (1) calculator(17 * 7) (eager, deterministic), (2) answer 119 from memory (cautious; trivial mental math). Preferred: calculator — exactly what the tool is for, near-zero cost, verifiable.",
+      "first_tool": "calculator",
+      "tool_sequence": [
+        "calculator"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "There are **119 days** in 17 weeks (17 weeks × 7 days per week = 119 days).",
+      "steps": 2,
+      "total_latency_ms": 2075.5,
+      "trace_error": null,
+      "trace": {
+        "final_text": "There are **119 days** in 17 weeks (17 weeks × 7 days per week = 119 days).",
+        "tool_calls": [
+          {
+            "name": "calculator",
+            "input": {
+              "expression": "17 * 7"
+            },
+            "result": 119,
+            "ok": true,
+            "error": null,
+            "latency_ms": 0.1
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2075.5,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "a04",
+      "category": "ambiguous",
+      "prompt": "What is the population of Tokyo?",
+      "expected": "wikipedia_search",
+      "notes": "Two plausible behaviours: (1) wikipedia_search (eager; fact varies year-to-year, source citation helps), (2) answer ~37M from memory (cautious; well-known). Preferred: wikipedia_search — figure changes over time and Wikipedia is the appropriate authority for demographic facts.",
+      "first_tool": "wikipedia_search",
+      "tool_sequence": [
+        "wikipedia_search"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "According to Wikipedia, **Tokyo's population is over 14 million** as of 2023. More specifically, the Demographics of Tokyo page indicates the population is approximately **14,195,730**.\n\nIt's worth noting that this refers to Tokyo Metropolis (the city proper). The Greater Tokyo Area, which includes surrounding cities and regions, has a much larger population.",
+      "steps": 2,
+      "total_latency_ms": 3193.6,
+      "trace_error": null,
+      "trace": {
+        "final_text": "According to Wikipedia, **Tokyo's population is over 14 million** as of 2023. More specifically, the Demographics of Tokyo page indicates the population is approximately **14,195,730**.\n\nIt's worth noting that this refers to Tokyo Metropolis (the city proper). The Greater Tokyo Area, which includes surrounding cities and regions, has a much larger population.",
+        "tool_calls": [
+          {
+            "name": "wikipedia_search",
+            "input": {
+              "query": "Tokyo population"
+            },
+            "result": [
+              {
+                "title": "Tokyo",
+                "snippet": "Tokyo, officially the Tokyo Metropolis, is the capital and most populous city of Japan. The population of the city proper was over 14 million as of 2023",
+                "url": "https://en.wikipedia.org/wiki/Tokyo"
+              },
+              {
+                "title": "Greater Tokyo Area",
+                "snippet": "the Greater Tokyo Area outside Tokyo Metropolis are: Chiba (population 940,000) Kawasaki (population 1.36 million) Sagamihara (population 730,000) Saitama",
+                "url": "https://en.wikipedia.org/wiki/Greater_Tokyo_Area"
+              },
+              {
+                "title": "Demographics of Tokyo",
+                "snippet": "population of Tokyo is 14,195,730 and had the largest population (11.5 percent of the total population). Before Tokyo existed as a major population center",
+                "url": "https://en.wikipedia.org/wiki/Demographics_of_Tokyo"
+              },
+              {
+                "title": "List of cities in Tokyo Metropolis by population",
+                "snippet": "cities (including towns and villages) in the Japanese metropolis of Tokyo with a population of more than 5,000 according to the 2020 Census. As of October",
+                "url": "https://en.wikipedia.org/wiki/List_of_cities_in_Tokyo_Metropolis_by_population"
+              },
+              {
+                "title": "Chūō, Tokyo",
+                "snippet": "offices and retail space, the daytime population swells to an estimated 650,000. Chūō is in the central area of Tokyo, surrounded by the five special wards",
+                "url": "https://en.wikipedia.org/wiki/Ch%C5%AB%C5%8D%2C_Tokyo"
+              }
+            ],
+            "ok": true,
+            "error": null,
+            "latency_ms": 730.3
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 3193.6,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "a05",
+      "category": "ambiguous",
+      "prompt": "In what year did the French Revolution begin?",
+      "expected": "wikipedia_search",
+      "notes": "Two plausible behaviours: (1) wikipedia_search (eager), (2) answer 1789 from memory (cautious). Preferred: wikipedia_search — encyclopedic question that the tool is purpose-built for; tool use is also defensible-from-memory but the brief grades tool selection.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": false,
+      "final_text": "The French Revolution began in **1789**. It was a period of social and political upheaval in France that lasted until the early 1800s and had profound effects on French society and the wider world.",
+      "steps": 1,
+      "total_latency_ms": 4176.0,
+      "trace_error": null,
+      "trace": {
+        "final_text": "The French Revolution began in **1789**. It was a period of social and political upheaval in France that lasted until the early 1800s and had profound effects on French society and the wider world.",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 4176.0,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "o01",
+      "category": "out_of_scope",
+      "prompt": "What's the weather in Tokyo right now?",
+      "expected": "abstain",
+      "notes": "No weather tool. wikipedia_search explicitly excludes real-time data. Right behaviour: explain the limitation, do not search Wikipedia for current weather.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": true,
+      "final_text": "I don't have access to real-time weather data. My available tools are limited to arithmetic calculations, personal note storage, and Wikipedia lookups—none of which can provide current weather information.\n\nTo check the weather in Tokyo right now, I'd recommend:\n- **Google Weather** – search \"Tokyo weather\"\n- **Weather.com** or **Weather.gov**\n- **Local Japanese weather services** like the Japan Meteorological Agency (JMA)\n- **Weather apps** on your phone\n\nIs there something else I can help you with?",
+      "steps": 1,
+      "total_latency_ms": 2462.9,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I don't have access to real-time weather data. My available tools are limited to arithmetic calculations, personal note storage, and Wikipedia lookups—none of which can provide current weather information.\n\nTo check the weather in Tokyo right now, I'd recommend:\n- **Google Weather** – search \"Tokyo weather\"\n- **Weather.com** or **Weather.gov**\n- **Local Japanese weather services** like the Japan Meteorological Agency (JMA)\n- **Weather apps** on your phone\n\nIs there something else I can help you with?",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 2462.9,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "o02",
+      "category": "out_of_scope",
+      "prompt": "Should I sell my Tesla stock this week?",
+      "expected": "abstain",
+      "notes": "Financial advice + real-time price. None of the three tools can answer; agent must not invent or guess. Right behaviour: decline.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": true,
+      "final_text": "I can't help with that decision. This is a personal financial question that depends on your individual circumstances, risk tolerance, investment goals, and current market conditions—none of which I have access to.\n\nFor investment advice, I'd recommend:\n- Consulting a qualified financial advisor or investment professional\n- Reviewing Tesla's recent earnings reports and analyst ratings\n- Considering your own financial situation and long-term investment strategy\n- Checking current market news and analysis from reputable financial sources\n\nI'm happy to help with other things like looking up factual information about Tesla as a company, doing calculations, or saving notes for your own reference.",
+      "steps": 1,
+      "total_latency_ms": 2108.5,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I can't help with that decision. This is a personal financial question that depends on your individual circumstances, risk tolerance, investment goals, and current market conditions—none of which I have access to.\n\nFor investment advice, I'd recommend:\n- Consulting a qualified financial advisor or investment professional\n- Reviewing Tesla's recent earnings reports and analyst ratings\n- Considering your own financial situation and long-term investment strategy\n- Checking current market news and analysis from reputable financial sources\n\nI'm happy to help with other things like looking up factual information about Tesla as a company, doing calculations, or saving notes for your own reference.",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 2108.5,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "o03",
+      "category": "out_of_scope",
+      "prompt": "Order me a pizza from Domino's.",
+      "expected": "abstain",
+      "notes": "No transaction tool. The agent should not save it as a \"note\" — the user is asking for an action, not a record. Right behaviour: explain it cannot place orders.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": true,
+      "final_text": "I don't have the ability to order food or make purchases. I can't access external services like Domino's or process transactions.\n\nTo order a pizza from Domino's, you can:\n1. **Visit their website** at dominos.com\n2. **Use their mobile app** (available on iOS and Android)\n3. **Call your local Domino's** directly\n4. **Use a food delivery app** like DoorDash, Uber Eats, or Grubhub that partners with Domino's\n\nIs there anything else I can help you with, like finding nutritional information about pizza or saving a note about your order preferences?",
+      "steps": 1,
+      "total_latency_ms": 2277.1,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I don't have the ability to order food or make purchases. I can't access external services like Domino's or process transactions.\n\nTo order a pizza from Domino's, you can:\n1. **Visit their website** at dominos.com\n2. **Use their mobile app** (available on iOS and Android)\n3. **Call your local Domino's** directly\n4. **Use a food delivery app** like DoorDash, Uber Eats, or Grubhub that partners with Domino's\n\nIs there anything else I can help you with, like finding nutritional information about pizza or saving a note about your order preferences?",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 2277.1,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "o04",
+      "category": "out_of_scope",
+      "prompt": "Book me a flight from London to Paris next Tuesday.",
+      "expected": "abstain",
+      "notes": "No booking tool. Same trap as o03 — eager save-as-note misreads the intent. Right behaviour: decline.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": true,
+      "final_text": "I appreciate the request, but I don't have the ability to book flights. My available tools are limited to:\n\n- **Calculator**: for arithmetic expressions\n- **Notes Store**: for saving, listing, and deleting personal notes\n- **Wikipedia Search**: for looking up encyclopedic information\n\nTo book a flight from London to Paris, you would need to:\n\n1. **Use a flight booking website** such as:\n   - Skyscanner\n   - Google Flights\n   - Kayak\n   - Expedia\n   - Airline websites directly (British Airways, Air France, Ryanair, etc.)\n\n2. **Contact a travel agent** who can book flights for you\n\n3. **Call an airline directly** to make a reservation\n\nWould you like me to help with something else, such as saving travel notes or looking up information about London or Paris?",
+      "steps": 1,
+      "total_latency_ms": 2147.8,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I appreciate the request, but I don't have the ability to book flights. My available tools are limited to:\n\n- **Calculator**: for arithmetic expressions\n- **Notes Store**: for saving, listing, and deleting personal notes\n- **Wikipedia Search**: for looking up encyclopedic information\n\nTo book a flight from London to Paris, you would need to:\n\n1. **Use a flight booking website** such as:\n   - Skyscanner\n   - Google Flights\n   - Kayak\n   - Expedia\n   - Airline websites directly (British Airways, Air France, Ryanair, etc.)\n\n2. **Contact a travel agent** who can book flights for you\n\n3. **Call an airline directly** to make a reservation\n\nWould you like me to help with something else, such as saving travel notes or looking up information about London or Paris?",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 2147.8,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "o05",
+      "category": "out_of_scope",
+      "prompt": "What's happening in the news today?",
+      "expected": "abstain",
+      "notes": "Real-time news. Wikipedia is not a news source for breaking events. Right behaviour: decline rather than search Wikipedia.",
+      "first_tool": null,
+      "tool_sequence": [],
+      "abstained": true,
+      "correct": true,
+      "final_text": "I don't have access to current news or real-time information. My tools are designed for:\n\n- **Arithmetic calculations** (using a calculator)\n- **Encyclopedic information** (searching Wikipedia for established facts, historical events, biographies, etc.)\n- **Personal note storage** (saving and retrieving your own notes)\n\nFor today's news, I'd recommend checking:\n- Major news websites (BBC, CNN, Reuters, AP News, etc.)\n- News aggregators (Google News, Apple News, etc.)\n- Social media platforms or news apps\n\nIs there something else I can help you with, like looking up historical information, doing calculations, or managing your notes?",
+      "steps": 1,
+      "total_latency_ms": 1920.4,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I don't have access to current news or real-time information. My tools are designed for:\n\n- **Arithmetic calculations** (using a calculator)\n- **Encyclopedic information** (searching Wikipedia for established facts, historical events, biographies, etc.)\n- **Personal note storage** (saving and retrieving your own notes)\n\nFor today's news, I'd recommend checking:\n- Major news websites (BBC, CNN, Reuters, AP News, etc.)\n- News aggregators (Google News, Apple News, etc.)\n- Social media platforms or news apps\n\nIs there something else I can help you with, like looking up historical information, doing calculations, or managing your notes?",
+        "tool_calls": [],
+        "steps": 1,
+        "total_latency_ms": 1920.4,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    }
+  ]
+}

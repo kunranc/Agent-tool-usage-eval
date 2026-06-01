@@ -1,0 +1,26 @@
+# env / secrets
+.env
+*.env.local
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# runtime state from tools
+state/
+notes.json
+
+# eval outputs (keep dir, ignore contents)
+# runs/*.json (committed — reviewer audit artefacts)
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,3 @@
+id,category,prompt,expected,notes
+f01,happy_path,"Save a note that says: BREAK this should trigger the failure hook.",notes_store,"Triggers BREAK token in notes_store. Tool raises RuntimeError; agent loop catches and returns {ok:False,error}. Grader still counts notes_store as 'expected' tool selection because the SELECTION was correct; only the execution failed. Verifies graceful degradation."
+f02,happy_path,"Please save the following reminder: tomorrow morning BREAK call the dentist.",notes_store,"Same failure injection but inside a longer natural prompt. Confirms the BREAK trigger is content-based, not prompt-shape-based. Agent should recover and acknowledge it couldn't save the note."

@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "timestamp": "20260601T104857",
+    "system_prompt": "B",
+    "prompt_set": "prompts/failure.csv",
+    "n_prompts": 2
+  },
+  "summary": {
+    "n": 2,
+    "by_category_n": {
+      "ambiguous": 0,
+      "happy_path": 2,
+      "out_of_scope": 0
+    },
+    "happy_path_accuracy": 1.0,
+    "ambiguous_preferred_rate": null,
+    "out_of_scope_abstention_rate": null,
+    "overall_correct_rate": 1.0,
+    "latency_ms": {
+      "min": 2949.3,
+      "p50": 2949.3,
+      "p95": 3206.9,
+      "max": 3206.9,
+      "mean": 3078.1
+    },
+    "trace_errors": 0,
+    "tool_failures": 2
+  },
+  "results": [
+    {
+      "id": "f01",
+      "category": "happy_path",
+      "prompt": "Save a note that says: BREAK this should trigger the failure hook.",
+      "expected": "notes_store",
+      "notes": "Triggers BREAK token in notes_store. Tool raises RuntimeError; agent loop catches and returns {ok:False,error}. Grader still counts notes_store as 'expected' tool selection because the SELECTION was correct; only the execution failed. Verifies graceful degradation.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "I see—the note text you provided contains a \"BREAK\" token that triggered a simulated failure in the notes system. This appears to be a test of error handling.\n\nThe note was not saved because the system detected the special \"BREAK\" keyword and intentionally failed. If you'd like to save a regular note instead, please provide different text without that keyword.",
+      "steps": 2,
+      "total_latency_ms": 2949.3,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I see—the note text you provided contains a \"BREAK\" token that triggered a simulated failure in the notes system. This appears to be a test of error handling.\n\nThe note was not saved because the system detected the special \"BREAK\" keyword and intentionally failed. If you'd like to save a regular note instead, please provide different text without that keyword.",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "BREAK this should trigger the failure hook."
+            },
+            "result": null,
+            "ok": false,
+            "error": "RuntimeError: simulated tool failure (BREAK token)",
+            "latency_ms": 0.0
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 2949.3,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    },
+    {
+      "id": "f02",
+      "category": "happy_path",
+      "prompt": "Please save the following reminder: tomorrow morning BREAK call the dentist.",
+      "expected": "notes_store",
+      "notes": "Same failure injection but inside a longer natural prompt. Confirms the BREAK trigger is content-based, not prompt-shape-based. Agent should recover and acknowledge it couldn't save the note.",
+      "first_tool": "notes_store",
+      "tool_sequence": [
+        "notes_store"
+      ],
+      "abstained": false,
+      "correct": true,
+      "final_text": "I encountered an error while trying to save your note. The system rejected the text because it contains a \"BREAK\" token, which appears to be a reserved word in the notes system.\n\nWould you like me to save it with slightly different wording? For example:\n- \"Tomorrow morning — call the dentist\"\n- \"Tomorrow morning: call the dentist\"\n- \"Tomorrow morning, call the dentist\"\n\nLet me know which version you'd prefer, or suggest your own alternative phrasing!",
+      "steps": 2,
+      "total_latency_ms": 3206.9,
+      "trace_error": null,
+      "trace": {
+        "final_text": "I encountered an error while trying to save your note. The system rejected the text because it contains a \"BREAK\" token, which appears to be a reserved word in the notes system.\n\nWould you like me to save it with slightly different wording? For example:\n- \"Tomorrow morning — call the dentist\"\n- \"Tomorrow morning: call the dentist\"\n- \"Tomorrow morning, call the dentist\"\n\nLet me know which version you'd prefer, or suggest your own alternative phrasing!",
+        "tool_calls": [
+          {
+            "name": "notes_store",
+            "input": {
+              "action": "add",
+              "text": "tomorrow morning BREAK call the dentist"
+            },
+            "result": null,
+            "ok": false,
+            "error": "RuntimeError: simulated tool failure (BREAK token)",
+            "latency_ms": 0.0
+          }
+        ],
+        "steps": 2,
+        "total_latency_ms": 3206.9,
+        "stop_reason": "end_turn",
+        "error": null
+      }
+    }
+  ]
+}
